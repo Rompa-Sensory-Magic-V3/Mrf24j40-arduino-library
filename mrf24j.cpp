@@ -208,6 +208,11 @@ void Mrf24j::interrupt_handler(void) {
         // read start of rxfifo for, has 2 bytes more added by FCS. frame_length = m + n + 2
         uint8_t frame_length = read_long(0x300);
 
+        // read the source from the header
+        uint16_t source = read_long(0x301 + 6);
+        source = source << 8 | read_long(0x301 + 7);
+        rx_info.source = source;
+
         // buffer all bytes in PHY Payload
         if(bufPHY){
             int rb_ptr = 0;
